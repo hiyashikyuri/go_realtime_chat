@@ -1,36 +1,25 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-const socket = new WebSocket("ws://127.0.0.1:8080/ws");
+const socket = new WebSocket('ws://127.0.0.1:8080/ws');
 
 function App() {
-  const [message, setMessage] = useState('')
-  const [inputValue, setInputValue] = useState('')
+  const [message, setMessage] = useState('');
+  const [inputValue, setInputValue] = useState('');
   
   useEffect(() => {
-    socket.onopen = () => {
-      setMessage('Connected')
-    };
-    
-    socket.onmessage = (e) => {
-      setMessage("Get message from server: " + e.data)
-    };
-
-    return () => {
-      socket.close()
-    }
-  }, [])
+    socket.onopen = () => setMessage('Connected');
+    socket.onmessage = (e) => setMessage("Get message from server: " + e.data);
+    return () => socket.close();
+  }, []);
   
   const handleClick = useCallback((e) => {
     e.preventDefault()
-    
-    socket.send(JSON.stringify({
-      message: inputValue
-    }))
-  }, [inputValue])
+    socket.send(JSON.stringify({ message: inputValue }))
+  }, [inputValue]);
   
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)
-  }, [])
+  }, []);
   
   return (
     <div className="App">
