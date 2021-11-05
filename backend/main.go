@@ -12,10 +12,6 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-type Message struct {
-	Message string `json:"message"`
-}
-
 func main() {
 	r := gin.Default()
 
@@ -50,19 +46,5 @@ func main() {
 	err := r.Run()
 	if err != nil {
 		return
-	}
-}
-
-func read(hub *Hub, client *websocket.Conn) {
-	for {
-		var message Message
-		err := client.ReadJSON(&message)
-		if err != nil {
-			log.Printf("error occurred: %v", err)
-			delete(hub.Clients, client)
-			break
-		}
-		log.Println(message)
-		hub.Broadcast <- message
 	}
 }

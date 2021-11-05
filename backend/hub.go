@@ -29,3 +29,17 @@ func (h *Hub) Run() {
 		}
 	}
 }
+
+func read(hub *Hub, client *websocket.Conn) {
+	for {
+		var message Message
+		err := client.ReadJSON(&message)
+		if err != nil {
+			log.Printf("error occurred: %v", err)
+			delete(hub.Clients, client)
+			break
+		}
+		log.Println(message)
+		hub.Broadcast <- message
+	}
+}
